@@ -4,6 +4,7 @@ const { JWT_SECRET } = require("../../config");
 module.exports = (req, res, next) => {
   const token = req.headers.authorization;
   if (token) {
+    // eslint-disable-next-line no-unused-vars
     jwt.verify(token, JWT_SECRET, (err, decoded) => {
       if (err) {
         next({ status: 403, message: "token invalid" });

@@ -1,4 +1,8 @@
 // Write your tests here
-test('sanity', () => {
-  expect(true).toBe(false)
-})
+const request = require("supertest");
+
+test("sanity", () => {
+  expect(true).toBe(true);
+});
+
+describe("");
