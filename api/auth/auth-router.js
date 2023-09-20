@@ -1,28 +1,17 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
-const db = require("../../data/dbConfig");
+const { registerValidation } = require("./auth-middleware");
+const User = require("../users/users-model");
 
-router.post("/register", async (req, res, next) => {
+router.post("/register", registerValidation, async (req, res, next) => {
   const { username, password } = req.body;
   const hash = bcrypt.hashSync(password, 8);
-  await db("users")
-    .where({ username })
-    .first()
-    .then((existingUser) => {
-      if (existingUser) {
-        next({ status: 422, message: "username taken" });
-      } else if (!username || !password) {
-        next({ status: 422, message: "username and password required" });
-      }
-    });
-  const [id] = await db("users").insert({ username, password: hash });
-  await db("users")
-    .where("id", id)
-    .first()
-    .then((newUser) => {
-      res.status(201).json(newUser);
-    })
-    .catch(next);
+  try {
+    const newUser = await User.add({ username, password: hash });
+    res.status(201).json(newUser);
+  } catch (err) {
+    next(err);
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
