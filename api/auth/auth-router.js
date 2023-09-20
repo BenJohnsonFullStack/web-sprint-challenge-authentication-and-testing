@@ -1,7 +1,28 @@
-const router = require('express').Router();
+const router = require("express").Router();
+const bcrypt = require("bcryptjs");
+const db = require("../../data/dbConfig");
 
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+router.post("/register", async (req, res, next) => {
+  const { username, password } = req.body;
+  const hash = bcrypt.hashSync(password, 8);
+  await db("users")
+    .where({ username })
+    .first()
+    .then((existingUser) => {
+      if (existingUser) {
+        next({ status: 422, message: "username taken" });
+      } else if (!username || !password) {
+        next({ status: 422, message: "username and password required" });
+      }
+    });
+  const [id] = await db("users").insert({ username, password: hash });
+  await db("users")
+    .where("id", id)
+    .first()
+    .then((newUser) => {
+      res.status(201).json(newUser);
+    })
+    .catch(next);
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -29,8 +50,8 @@ router.post('/register', (req, res) => {
   */
 });
 
-router.post('/login', (req, res) => {
-  res.end('implement login, please!');
+router.post("/login", (req, res) => {
+  res.end("implement login, please!");
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
