@@ -7,9 +7,9 @@
     "server": "nodemon index.js",
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
-    "seed": "cross-env PASSWORD=1234 knex seed:run",
+    "seed": "knex seed:run",
     "resetdb": "npm run rollback && npm run migrate && npm run seed",
-    "test": "cross-env NODE_ENV=testing jest --verbose --watchAll --runInBand --silent"
+    "test": "cross-env NODE_ENV=testing jest --verbose --watchAll --runInBand"
   },
   "repository": {
     "type": "git",

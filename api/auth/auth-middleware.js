@@ -21,7 +21,6 @@ const loginValidation = async (req, re, next) => {
     next({ status: 422, message: "username and password required" });
   } else {
     const [existingUser] = await User.getBy({ username });
-    console.log(existingUser);
     if (!existingUser || !bcrypt.compareSync(password, existingUser.password)) {
       next({ status: 404, message: "invalid credentials" });
     } else {

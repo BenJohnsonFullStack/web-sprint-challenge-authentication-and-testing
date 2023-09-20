@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const hash = bcrypt.hashSync(process.env.PASSWORD, 8);
+const hash = bcrypt.hashSync("1234", 8);
 
 /**
  * @param { import("knex").Knex } knex
